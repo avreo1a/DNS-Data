@@ -6,12 +6,9 @@ import sqlite3
 from database import get_db
 from database import get_db, init_db
 
-
 app = Flask(__name__)
 
 captured_packets = []
-
-
 
 
 #####DATABASE SETUP####
@@ -20,6 +17,9 @@ init_db()
 
 def packet_handler(pkt):
     try:
+        
+        if not hasattr(pkt, 'ip'):
+            return  #Skipping non ip packets because we need src IP to be NOT NULL
         # IP Layer
         src_ip = pkt.ip.src if hasattr(pkt, 'ip') else None
         dst_ip = pkt.ip.dst if hasattr(pkt, 'ip') else None
